@@ -51,7 +51,7 @@ IMAGE := $(REGISTRY)/$(BIN)
 TAG := $(VERSION)
 OS_ARCH_TAG := $(TAG)__$(OS)_$(ARCH)
 
-BUILD_IMAGE ?= golang:1.22-alpine
+BUILD_IMAGE ?= golang:1.22
 
 DBG_MAKEFILE ?=
 ifneq ($(DBG_MAKEFILE),1)
@@ -281,6 +281,6 @@ lint-staticcheck:
 	go run honnef.co/go/tools/cmd/staticcheck@2023.1.3
 
 lint-golangci-lint:
-	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.53.3 run
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.59.0 run
 
 lint: lint-staticcheck lint-golangci-lint
