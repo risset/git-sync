@@ -2195,9 +2195,9 @@ function e2e::auth_github_app() {
         --github-app-application-id "$GITHUB_APP_APPLICATION_ID" \
         --github-app-installation-id "$GITHUB_APP_INSTALLATION_ID" \
         --github-app-private-key-file "/key.pem" \
-        --root="$ROOT" 
-        # --link="link"
-    # assert_file_exists "/tmp/sync/LICENSE"
+        --root="$ROOT" \
+        --link="link"
+    assert_file_exists "/tmp/sync/LICENSE"
 }
 
 ##############################################
