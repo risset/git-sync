@@ -25,8 +25,8 @@ VERSION ?= $(shell git describe --tags --always --dirty)
 #VERSION ?= 1.2.3
 
 # Set these to cross-compile.
-GOOS ?= linux
-GOARCH ?= amd64
+GOOS ?=
+GOARCH ?=
 
 # Set this to 1 to build a debugger-friendly binary.
 DBG ?=
