@@ -291,7 +291,7 @@ function GIT_SYNC() {
         -v "$DOT_SSH/1/id_test":"/ssh/secret.1":ro \
         -v "$DOT_SSH/2/id_test":"/ssh/secret.2":ro \
         -v "$DOT_SSH/3/id_test":"/ssh/secret.3":ro \
-        -v ./$GITHUB_APP_PRIVATE_KEY_FILE:/key.pem \
+	-v "$(pwd)/$GITHUB_APP_PRIVATE_KEY_FILE":"/key.pem":ro \
         "${IMAGE}" \
             -v=6 \
             --add-user \
