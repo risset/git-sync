@@ -105,7 +105,7 @@ const (
 	gcOff        = "off"
 )
 
-const defaultDirMode = os.FileMode(0700) // subject to umask
+const defaultDirMode = os.FileMode(0775) // subject to umask
 
 // repoSync represents the remote repo and the local sync of it.
 type repoSync struct {
@@ -545,7 +545,6 @@ func main() {
 				fatalConfigError(log, true, "invalid flag: credentials may not be specified in --repo when --username is specified")
 			}
 		}
-
 	} else {
 		if *flPassword != "" {
 			fatalConfigError(log, true, "invalid flag: $GITSYNC_PASSWORD may only be specified when --username is specified")
@@ -877,7 +876,6 @@ func main() {
 				return err
 			}
 		}
-
 		if *flAskPassURL != "" {
 			// When using an auth URL, the credentials can be dynamic, and need
 			// to be re-fetched each time.
@@ -2434,7 +2432,7 @@ OPTIONS
     --github-app-application-id <int>, $GITSYNC_GITHUB_APP_APPLICATION_ID
             The app ID of the GitHub app used for GitHub app authentication.
             One of --github-app-application-id or --github-app-client-id is required.
-                        
+
     --github-app-client-id <int>, $GITSYNC_GITHUB_APP_CLIENT_ID
             The client ID of the GitHub app used for GitHub app authentication.
 
