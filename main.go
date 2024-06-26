@@ -557,29 +557,29 @@ func main() {
 
 	if *flGithubAppPrivateKeyFile != "" {
 		if *flGithubAppApplicationID == 0 && *flGithubAppClientID == "" {
-			handleConfigError(log, true, "ERROR: either --github-app-application-id or --github-app-client-id must be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: either --github-app-application-id or --github-app-client-id must be specified when --github-app-private-key-file is specified")
 		}
 		if *flGithubAppApplicationID != 0 && *flGithubAppClientID != "" {
-			handleConfigError(log, true, "ERROR: only one of --github-app-application-id or --github-app-client-id may be specified")
+			fatalConfigError(log, true, "ERROR: only one of --github-app-application-id or --github-app-client-id may be specified")
 		}
 		if *flGithubAppInstallationID == 0 {
-			handleConfigError(log, true, "ERROR: --github-app-installation-id must be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: --github-app-installation-id must be specified when --github-app-private-key-file is specified")
 		}
 		if *flUsername != "" {
-			handleConfigError(log, true, "ERROR: --username may not be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: --username may not be specified when --github-app-private-key-file is specified")
 		}
 		if *flPassword != "" {
-			handleConfigError(log, true, "ERROR: --password may not be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: --password may not be specified when --github-app-private-key-file is specified")
 		}
 		if *flPasswordFile != "" {
-			handleConfigError(log, true, "ERROR: --password-file may not be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: --password-file may not be specified when --github-app-private-key-file is specified")
 		}
 	} else {
 		if *flGithubAppApplicationID != 0 {
-			handleConfigError(log, true, "ERROR: --github-app-application-id may only be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: --github-app-application-id may only be specified when --github-app-private-key-file is specified")
 		}
 		if *flGithubAppInstallationID != 0 {
-			handleConfigError(log, true, "ERROR: --github-app-installation-id may only be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "ERROR: --github-app-installation-id may only be specified when --github-app-private-key-file is specified")
 		}
 	}
 
