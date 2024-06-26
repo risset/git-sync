@@ -557,29 +557,29 @@ func main() {
 
 	if *flGithubAppPrivateKeyFile != "" {
 		if *flGithubAppApplicationID == 0 && *flGithubAppClientID == "" {
-			fatalConfigError(log, true, "ERROR: either --github-app-application-id or --github-app-client-id must be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: either --github-app-application-id or --github-app-client-id must be specified when --github-app-private-key-file is specified")
 		}
 		if *flGithubAppApplicationID != 0 && *flGithubAppClientID != "" {
-			fatalConfigError(log, true, "ERROR: only one of --github-app-application-id or --github-app-client-id may be specified")
+			fatalConfigError(log, true, "invalid flag: only one of --github-app-application-id or --github-app-client-id may be specified")
 		}
 		if *flGithubAppInstallationID == 0 {
-			fatalConfigError(log, true, "ERROR: --github-app-installation-id must be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: --github-app-installation-id must be specified when --github-app-private-key-file is specified")
 		}
 		if *flUsername != "" {
-			fatalConfigError(log, true, "ERROR: --username may not be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: --username may not be specified when --github-app-private-key-file is specified")
 		}
 		if *flPassword != "" {
-			fatalConfigError(log, true, "ERROR: --password may not be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: --password may not be specified when --github-app-private-key-file is specified")
 		}
 		if *flPasswordFile != "" {
-			fatalConfigError(log, true, "ERROR: --password-file may not be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: --password-file may not be specified when --github-app-private-key-file is specified")
 		}
 	} else {
 		if *flGithubAppApplicationID != 0 {
-			fatalConfigError(log, true, "ERROR: --github-app-application-id may only be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: --github-app-application-id may only be specified when --github-app-private-key-file is specified")
 		}
 		if *flGithubAppInstallationID != 0 {
-			fatalConfigError(log, true, "ERROR: --github-app-installation-id may only be specified when --github-app-private-key-file is specified")
+			fatalConfigError(log, true, "invalid flag: --github-app-installation-id may only be specified when --github-app-private-key-file is specified")
 		}
 	}
 
@@ -2418,24 +2418,24 @@ OPTIONS
             - off: Disable explicit git garbage collection, which may be a good
               fit when also using --one-time.
 
-    --github-base-url <string>, $GITSYNC_BASE_URL
+    --github-base-url <string>, $GITSYNC_GITHUB_BASE_URL
             The GitHub base URL to use in GitHub requests when GitHub app
             authentication is used. If not specified, defaults to
             https://api.github.com/.
 
-    --github-app-private-key-file <string>, $GITSYNC_APP_PRIVATE_KEY_FILE
+    --github-app-private-key-file <string>, $GITSYNC_GITHUB_APP_PRIVATE_KEY_FILE
             The file from which the private key to use for GitHub app
             authentication will be read.
 
-    --github-app-installation-id <int>, $GITSYNC_APP_INSTALLATION_ID
+    --github-app-installation-id <int>, $GITSYNC_GITHUB_APP_INSTALLATION_ID
             The installation ID of the GitHub app used for GitHub app
             authentication.
 
-    --github-app-application-id <int>, $GITSYNC_APP_APPLICATION_ID
+    --github-app-application-id <int>, $GITSYNC_GITHUB_APP_APPLICATION_ID
             The app ID of the GitHub app used for GitHub app authentication.
             One of --github-app-application-id or --github-app-client-id is required.
                         
-    --github-app-client-id <int>, $GITSYNC_APP_CLIENT_ID
+    --github-app-client-id <int>, $GITSYNC_GITHUB_APP_CLIENT_ID
             The client ID of the GitHub app used for GitHub app authentication.
 
     --group-write, $GITSYNC_GROUP_WRITE
@@ -2655,15 +2655,15 @@ AUTHENTICATION
             associated cookies can contain authentication information.
 
     github app
-           When --github-app-private-key-file (GITSYNC_GITHUB_APP_PRIVATE_KEY_FILE),
-           --github-app-application-id (GITSYNC_GITHUB_APP_APPLICATION_ID)
-           and --github-app-installation_id (GITSYNC_GITHUB_APP_INSTALLATION_ID)
+           When --github-app-private-key-file ($GITSYNC_GITHUB_APP_PRIVATE_KEY_FILE),
+           --github-app-application-id ($GITSYNC_GITHUB_APP_APPLICATION_ID)
+           and --github-app-installation_id ($GITSYNC_GITHUB_APP_INSTALLATION_ID)
            are specified, GitHub app authentication will be used.
 
            These credentials are used to request a short-lived token which
            is used for authentication. The base URL of the GitHub request made
            to retrieve the token can also be specified via
-           --github-base-url (GITSYNC_GITHUB_BASE_URL), which defaults to
+           --github-base-url ($GITSYNC_GITHUB_BASE_URL), which defaults to
            https://api.github.com/.
 
            The GitHub app must have sufficient access to the repository to sync.
