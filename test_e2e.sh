@@ -2188,11 +2188,23 @@ function e2e::auth_askpass_url_slow_start() {
 ##############################################
 # Test github app auth
 ##############################################
-function e2e::auth_github_app() {
+function e2e::auth_github_app_application_id() {
     GIT_SYNC \
         --one-time \
         --repo="$GITHUB_APP_AUTH_TEST_REPO" \
         --github-app-application-id "$GITHUB_APP_APPLICATION_ID" \
+        --github-app-installation-id "$GITHUB_APP_INSTALLATION_ID" \
+        --github-app-private-key-file "/key.pem" \
+        --root="$ROOT" \
+        --link="link"
+    assert_file_exists "$ROOT/link/LICENSE"
+}
+
+function e2e::auth_github_app_client_id() {
+    GIT_SYNC \
+        --one-time \
+        --repo="$GITHUB_APP_AUTH_TEST_REPO" \
+        --github-app-client-id "$GITHUB_APP_CLIENT_ID" \
         --github-app-installation-id "$GITHUB_APP_INSTALLATION_ID" \
         --github-app-private-key-file "/key.pem" \
         --root="$ROOT" \
