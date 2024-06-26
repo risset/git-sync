@@ -1930,7 +1930,7 @@ func (git *repoSync) RefreshGitHubAppToken(ctx context.Context, githubBaseURL, p
 	// either client ID or app ID can be used when minting JWTs
 	issuer := clientID
 	if issuer == "" {
-		issuer = fmt.Sprintf("%d", appID)
+		issuer = strconv.Itoa(appID)
 	}
 
 	claims := jwt.RegisteredClaims{
