@@ -25,8 +25,8 @@ VERSION ?= $(shell git describe --tags --always --dirty)
 #VERSION ?= 1.2.3
 
 # Set these to cross-compile.
-GOOS ?=
-GOARCH ?=
+GOOS ?= linux
+GOARCH ?= arm64
 
 # Set this to 1 to build a debugger-friendly binary.
 DBG ?=
@@ -250,7 +250,7 @@ test: $(BUILD_DIRS)
 	    "
 	VERBOSE=1 ./test_e2e.sh
 
-TEST_TOOLS := $(shell find _test_tools/* -type d -printf "%f ")
+TEST_TOOLS := $(shell gfind _test_tools/* -type d -printf "%f ")
 test-tools: $(foreach tool, $(TEST_TOOLS), .container-test_tool.$(tool))
 
 .container-test_tool.%: _test_tools/% _test_tools/%/*

@@ -105,7 +105,7 @@ const (
 	gcOff        = "off"
 )
 
-const defaultDirMode = os.FileMode(0775) // subject to umask
+const defaultDirMode = os.FileMode(0700) // subject to umask
 
 // repoSync represents the remote repo and the local sync of it.
 type repoSync struct {
@@ -263,6 +263,9 @@ func main() {
 	flGithubAppPrivateKeyFile := pflag.String("github-app-private-key-file",
 		envString("", "GITSYNC_GITHUB_APP_PRIVATE_KEY_FILE"),
 		"the file from which the private key for GitHub app auth will be sourced")
+	flGithubAppClientID := pflag.String("github-app-client-id",
+		envString("", "GTSYNC_GITHUB_APP_CLIENT_ID"),
+		"the GitHub app client ID to use for GitHub app auth")
 	flGithubAppApplicationID := pflag.Int("github-app-application-id",
 		envInt(0, "GTSYNC_GITHUB_APP_APPLICATION_ID"),
 		"the GitHub app application ID to use for GitHub app auth")
@@ -513,8 +516,11 @@ func main() {
 	}
 
 	if *flGithubAppPrivateKeyFile != "" {
-		if *flGithubAppApplicationID == 0 {
-			handleConfigError(log, true, "ERROR: --github-app-application-id must be specified when --github-app-private-key-file is specified")
+		if *flGithubAppApplicationID == 0 && *flGithubAppClientID == "" {
+			handleConfigError(log, true, "ERROR: either --github-app-application-id or --github-app-client-id must be specified when --github-app-private-key-file is specified")
+		}
+		if *flGithubAppApplicationID != 0 && *flGithubAppClientID != "" {
+			handleConfigError(log, true, "ERROR: only one of --github-app-application-id or --github-app-client-id may be specified")
 		}
 		if *flGithubAppInstallationID == 0 {
 			handleConfigError(log, true, "ERROR: --github-app-installation-id must be specified when --github-app-private-key-file is specified")
@@ -833,9 +839,9 @@ func main() {
 			metricAskpassCount.WithLabelValues(metricKeySuccess).Inc()
 		}
 
-		if *flGithubAppPrivateKeyFile != "" && *flGithubAppInstallationID != 0 && *flGithubAppApplicationID != 0 {
+		if *flGithubAppPrivateKeyFile != "" && *flGithubAppInstallationID != 0 && (*flGithubAppApplicationID != 0 || *flGithubAppClientID != "") {
 			if git.appTokenExpiry.Before(time.Now().Add(30 * time.Second)) {
-				if err := git.RefreshGitHubAppToken(ctx, *flGithubBaseURL, *flGithubAppPrivateKeyFile, *flGithubAppApplicationID, *flGithubAppInstallationID); err != nil {
+				if err := git.RefreshGitHubAppToken(ctx, *flGithubBaseURL, *flGithubAppPrivateKeyFile, *flGithubAppClientID, *flGithubAppApplicationID, *flGithubAppInstallationID); err != nil {
 					metricAskpassCount.WithLabelValues(metricKeyError).Inc()
 					return err
 				}
@@ -1905,7 +1911,7 @@ func (git *repoSync) CallAskPassURL(ctx context.Context) error {
 }
 
 // RefreshGitHubAppToken generates a new installation token for a GitHub app and stores it as a credential
-func (git *repoSync) RefreshGitHubAppToken(ctx context.Context, githubBaseURL, privateKeyFile string, appID, installationID int) error {
+func (git *repoSync) RefreshGitHubAppToken(ctx context.Context, githubBaseURL, privateKeyFile, clientID string, appID, installationID int) error {
 	git.log.V(3).Info("refreshing GitHub app token")
 
 	privateKeyBytes, err := os.ReadFile(privateKeyFile)
@@ -1921,8 +1927,14 @@ func (git *repoSync) RefreshGitHubAppToken(ctx context.Context, githubBaseURL, p
 
 	now := time.Now()
 
+	// either client ID or app ID can be used when minting JWTs
+	issuer := clientID
+	if issuer == "" {
+		issuer = fmt.Sprintf("%d", appID)
+	}
+
 	claims := jwt.RegisteredClaims{
-		Issuer:    fmt.Sprintf("%d", appID),
+		Issuer:    issuer,
 		IssuedAt:  jwt.NewNumericDate(now),
 		ExpiresAt: jwt.NewNumericDate(now.Add(10 * time.Minute)),
 	}
@@ -2354,6 +2366,10 @@ OPTIONS
 
     --github-app-application-id <int>, $GITSYNC_APP_APPLICATION_ID
             The app ID of the GitHub app used for GitHub app authentication.
+            One of --github-app-application-id or --github-app-client-id is required.
+                        
+    --github-app-client-id <int>, $GITSYNC_APP_CLIENT_ID
+            The client ID of the GitHub app used for GitHub app authentication.
 
     --group-write, $GITSYNC_GROUP_WRITE
             Ensure that data written to disk (including the git repo metadata,
