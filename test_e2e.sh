@@ -2197,7 +2197,7 @@ function e2e::auth_github_app() {
         --github-app-private-key-file "/key.pem" \
         --root="$ROOT" \
         --link="link"
-    assert_file_exists "/tmp/sync/LICENSE"
+    assert_file_exists "$ROOT/link/LICENSE"
 }
 
 ##############################################
