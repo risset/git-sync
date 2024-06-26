@@ -3604,7 +3604,7 @@ for t; do
         # See comments on run_test for details.
         RUN_RET=0
         LOG="${DIR}/log.$t"
-        run_test RUN_RET "${TEST_FN}" #>"${LOG}.${RUN}" 2>&1
+        run_test RUN_RET "${TEST_FN}" >"${LOG}.${RUN}" 2>&1
         if [[ "$RUN_RET" == 0 ]]; then
             pass
         else
